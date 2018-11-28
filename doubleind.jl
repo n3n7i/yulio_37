@@ -56,20 +56,28 @@ macro yulio_Do(x)
 
   if((x.head == :(.=)) && (x.args[1].head == :(ref)) && (x.args[1].args[1].head == :(ref)))
 
-    x1 = eval(x.args[1].args[1].args[1])
+    x1 = x.args[1].args[1].args[1]
 
-    x2 = eval(x.args[1].args[1].args[2])
+    x2 = x.args[1].args[1].args[2]
     
-    x3 = eval(x.args[1].args[2])
+    x3 = x.args[1].args[2]
 
-    x4 = eval(x.args[2]);
+    x4 = x.args[2];
 
-    zx = doubleind(x2, x3);
+    println(x1, x2, x3, x4);
 
-    return :($(x1)[$zx] .= $(x4));
+    quote
+ 
+      local _x1 = $(esc(x1))
+      local _x2 = $(esc(x2))
+      local _x3 = $(esc(x3))
+      local _x4 = $(esc(x4))
+
+      _x1[doubleind(_x2, _x3)] .= _x4;
+
+      end;
 
     end;
 
   end;
-
 
