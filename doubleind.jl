@@ -54,6 +54,11 @@ function doubleind!(x::Array{Int, 1}, b::BitArray{1}, p::Array{Int,1})
 
 macro yulio_Do(x)
 
+  ## alternate 
+  ## @yulio_Do scalarvec[x][y] .= z
+  ## sets scalarvec
+
+
   if((x.head == :(.=)) && (x.args[1].head == :(ref)) && (x.args[1].args[1].head == :(ref)))
 
     x1 = x.args[1].args[1].args[1]
@@ -66,7 +71,7 @@ macro yulio_Do(x)
 
     println(x1, x2, x3, x4);
 
-    quote
+    return quote
  
       local _x1 = $(esc(x1))
       local _x2 = $(esc(x2))
@@ -78,6 +83,29 @@ macro yulio_Do(x)
       end;
 
     end;
+
+
+  ## alternate 
+  ## scalarvec = @yulio_Do scalarvec'''
+  ## shape scalarvec to dim3 vec
+
+  xsym = Symbol("'");
+
+  if((x.head == xsym) && (x.args[1].head == xsym) && (x.args[1].args[1].head == xsym))
+
+    x1 = x.args[1].args[1].args[1]
+
+    return quote
+ 
+      local _x1 = $(esc(x1))
+
+      reshape(_x1, 1, 1, length(_x1))
+
+      end;
+
+    end;
+
+  
 
   end;
 
